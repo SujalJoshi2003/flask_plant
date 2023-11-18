@@ -4,8 +4,13 @@ from torchvision import transforms
 import torch
 from torchvision import models
 from torch import nn
+from flask_cors import CORS
+
+  # Enable CORS for all routes
+
 
 app = Flask(__name__)
+CORS(app)
 
 # Load your pre-trained PyTorch model
 vgg16 = models.vgg16(pretrained=False)  # Set pretrained to False since you're loading your own weights
