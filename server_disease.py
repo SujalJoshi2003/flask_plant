@@ -45,16 +45,15 @@ def predict_disease(image):
 
 @app.route('/detect_disease', methods=['GET', 'POST'])
 def detect_disease():
-    try:
-        if request.method == 'POST':
+    
+   try:
+        if request.method == 'POST' || reques.method == 'GET' :
             # Handle POST request
             image = request.files['image']
             processed_image = process_image(image)
             result = predict_disease(processed_image)
             return jsonify({'result': result})
-        elif request.method == 'GET':
-            # Handle GET request
-            return jsonify({'message': 'GET request received'})
+        
     except Exception as e:
         return jsonify({'error': str(e)})
 
