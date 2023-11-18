@@ -6,11 +6,8 @@ from torchvision import models
 from torch import nn
 from flask_cors import CORS
 
-  # Enable CORS for all routes
-
-
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Enable CORS for all routes
 
 # Load your pre-trained PyTorch model
 vgg16 = models.vgg16(pretrained=False)  # Set pretrained to False since you're loading your own weights
@@ -46,17 +43,18 @@ def predict_disease(image):
     _, predicted_class = torch.max(output, 1)
     return int(predicted_class)
 
-@app.route('/detect_disease', methods=['POST'])
+@app.route('/detect_disease', methods=['GET', 'POST'])
 def detect_disease():
     try:
-        image = request.files['image']
-        processed_image = process_image(image)
-
-        # Perform inference using your PyTorch model
-        result = predict_disease(processed_image)
-
-        return jsonify({'result': result})
-
+        if request.method == 'POST':
+            # Handle POST request
+            image = request.files['image']
+            processed_image = process_image(image)
+            result = predict_disease(processed_image)
+            return jsonify({'result': result})
+        elif request.method == 'GET':
+            # Handle GET request
+            return jsonify({'message': 'GET request received'})
     except Exception as e:
         return jsonify({'error': str(e)})
 
