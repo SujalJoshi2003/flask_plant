@@ -46,7 +46,7 @@ def predict_disease(image):
     _, predicted_class = torch.max(output, 1)
     return int(predicted_class)
 
-@app.route('/detect_disease', methods=['GET'])
+@app.route('/detect_disease', methods=['POST'])
 def detect_disease():
     try:
         image = request.files['image']
