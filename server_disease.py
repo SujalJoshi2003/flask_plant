@@ -43,22 +43,16 @@ def predict_disease(image):
     _, predicted_class = torch.max(output, 1)
     return int(predicted_class)
 
-@app.route('/detect_disease', methods=['GET', 'POST'])
+@app.route('/detect_disease', methods=['POST'])
 def detect_disease():
     try:
-        if request.method == 'POST' or request.method == 'GET':
-            # Handle POST request
-            if 'Authorization' not in request.headers:
-                return jsonify({'error': 'Missing Authorization header'})
+        if 'image' not in request.files:
+            return jsonify({'error': 'No image file provided'})
 
-            auth_token = request.headers['Authorization']
-            # Verify the validity of the authentication token
-            # ...
-
-            image = request.files['image']
-            processed_image = process_image(image)
-            result = predict_disease(processed_image)
-            return jsonify({'result': result})
+        image = request.files['image']
+        processed_image = process_image(image)
+        result = predict_disease(processed_image)
+        return jsonify({'result': result})
 
     except Exception as e:
         return jsonify({'error': str(e)})
