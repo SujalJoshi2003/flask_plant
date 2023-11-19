@@ -45,17 +45,24 @@ def predict_disease(image):
 
 @app.route('/detect_disease', methods=['GET', 'POST'])
 def detect_disease():
-    
-   try:
-        if request.method == 'POST' || reques.method == 'GET' :
+    try:
+        if request.method == 'POST' or request.method == 'GET':
             # Handle POST request
+            if 'Authorization' not in request.headers:
+                return jsonify({'error': 'Missing Authorization header'})
+
+            auth_token = request.headers['Authorization']
+            # Verify the validity of the authentication token
+            # ...
+
             image = request.files['image']
             processed_image = process_image(image)
             result = predict_disease(processed_image)
             return jsonify({'result': result})
-        
+
     except Exception as e:
         return jsonify({'error': str(e)})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
